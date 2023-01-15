@@ -2,6 +2,10 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
+	"pss/docs"
+
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"pss/middleware/jwt"
 	"pss/pkg/setting"
 	"pss/routers/api"
@@ -11,9 +15,12 @@ import (
 func InitRouter() *gin.Engine {
 	r := gin.New()
 
+	docs.SwaggerInfo.BasePath = "/api/v1"
 	r.Use(gin.Logger())
 
 	r.Use(gin.Recovery())
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	gin.SetMode(setting.RunMode)
 
