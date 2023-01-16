@@ -9,8 +9,10 @@ import (
 	"os"
 	"os/signal"
 	"pss/models"
+	"pss/pkg/gredis"
 	"pss/pkg/logging"
 	"pss/pkg/setting"
+	"pss/pkg/util"
 	"pss/routers"
 	"time"
 )
@@ -19,6 +21,8 @@ func main() {
 	setting.Setup()
 	models.Setup()
 	logging.Setup()
+	gredis.Setup()
+	util.Setup()
 
 	gin.SetMode(setting.ServerSetting.RunMode)
 
