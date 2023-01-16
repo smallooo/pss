@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"pss/docs"
 	"pss/pkg/export"
+	"pss/pkg/qrcode"
 	"pss/pkg/upload"
 
 	swaggerfiles "github.com/swaggo/files"
@@ -23,6 +24,7 @@ func InitRouter() *gin.Engine {
 
 	r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
+	r.StaticFS("/qrcode", http.Dir(qrcode.GetQrCodeFullPath()))
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
@@ -56,6 +58,8 @@ func InitRouter() *gin.Engine {
 		apiv1.PUT("/articles/:id", v1.EditArticle)
 		//删除指定文章
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
+		//生成二维码
+		apiv1.POST("/articles/poster/generate", v1.GenerateArticlePoster)
 
 	}
 
