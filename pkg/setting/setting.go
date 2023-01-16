@@ -52,15 +52,15 @@ type Database struct {
 
 var DatabaseSetting = &Database{}
 
-//type Redis struct {
-//	Host        string
-//	Password    string
-//	MaxIdle     int
-//	MaxActive   int
-//	IdleTimeout time.Duration
-//}
+type Redis struct {
+	Host        string
+	Password    string
+	MaxIdle     int
+	MaxActive   int
+	IdleTimeout time.Duration
+}
 
-//var RedisSetting = &Redis{}
+var RedisSetting = &Redis{}
 
 var cfg *ini.File
 
@@ -80,7 +80,7 @@ func Setup() {
 	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
 	ServerSetting.WriteTimeout = ServerSetting.WriteTimeout * time.Second
-	//RedisSetting.IdleTimeout = RedisSetting.IdleTimeout * time.Second
+	RedisSetting.IdleTimeout = RedisSetting.IdleTimeout * time.Second
 }
 
 // mapTo map section
