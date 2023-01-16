@@ -7,3 +7,6 @@ docker build -t pss-docker-scratch .
 
 ### run 
 docker run -p 8000:8000 pss-docker-scratch
+
+### swagger
+swag init
