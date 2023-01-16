@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"pss/pkg/setting"
 	"time"
 )
 
@@ -16,6 +17,15 @@ var (
 
 func getLogFilePath() string {
 	return fmt.Sprintf("%s", LogSavePath)
+}
+
+// getLogFileName get the save name of the log file
+func getLogFileName() string {
+	return fmt.Sprintf("%s%s.%s",
+		setting.AppSetting.LogSaveName,
+		time.Now().Format(setting.AppSetting.TimeFormat),
+		setting.AppSetting.LogFileExt,
+	)
 }
 
 func getLogFileFullPath() string {
