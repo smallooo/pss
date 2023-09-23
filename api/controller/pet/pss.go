@@ -1,4 +1,4 @@
-package v2
+package pet
 
 import (
 	"github.com/gin-gonic/gin"

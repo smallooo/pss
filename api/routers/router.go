@@ -2,19 +2,19 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 	"net/http"
 	"pss/api/controller"
+	"pss/api/controller/article"
+	"pss/api/controller/pet"
+	"pss/api/controller/sample"
 	"pss/api/controller/user"
-	"pss/api/controller/v1"
-	"pss/api/controller/v2"
 	"pss/api/middleware/jwt"
 	"pss/docs"
 	"pss/pkg/export"
 	"pss/pkg/qrcode"
 	"pss/pkg/upload"
-
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func InitRouter() *gin.Engine {
@@ -23,63 +23,69 @@ func InitRouter() *gin.Engine {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
-
 	r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 	r.StaticFS("/qrcode", http.Dir(qrcode.GetQrCodeFullPath()))
-
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-
-	//login
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/auth", controller.GetAuth)
-
-	//上传图片
 	r.POST("/upload", controller.UploadImage)
 
-	article := r.Group("/article")
-	pet := r.Group("/pet")
+	r.GET("/test", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "test",
+		})
+	})
+
+	sample1 := r.Group("/sample")
+
+	article1 := r.Group("/article")
+	pet1 := r.Group("/pet")
 	user1 := r.Group("/user")
 
-	article.Use(jwt.JWT())
+	sample1.Use()
 	{
-		//获取标签列表
-		article.GET("/tags", v1.GetTags)
-		//新建标签
-		article.POST("/tags", v1.AddTag)
-		//更新指定标签
-		article.PUT("/tags/:id", v1.EditTag)
-		//删除指定标签
-		article.DELETE("/tags/:id", v1.DeleteTag)
-		//导出标签
-		r.POST("/tags/export", v1.ExportTag)
-		//导入标签
-		r.POST("/tags/import", v1.ImportTag)
-		//获取文章列表
-		article.GET("/articles", v1.GetArticles)
-		//获取指定文章
-		article.GET("/articles/:id", v1.GetArticle)
-		//新建文章
-		article.POST("/articles", v1.AddArticle)
-		//更新指定文章
-		article.PUT("/articles/:id", v1.EditArticle)
-		//删除指定文章
-		article.DELETE("/articles/:id", v1.DeleteArticle)
-		//生成二维码
-		article.POST("/articles/poster/generate", v1.GenerateArticlePoster)
+		sample1.GET("/db/insert", sample.DbInsert)
+		sample1.GET("/db/update", sample.DbInsert)
+		sample1.GET("/db/select", sample.DbInsert)
+		sample1.GET("/db/delete", sample.DbInsert)
+		sample1.GET("mongo/1", sample.DbInsert)
+		sample1.GET("mongo/2", sample.DbInsert)
+		sample1.GET("mongo/3", sample.DbInsert)
+		sample1.GET("mongo/4", sample.DbInsert)
+		sample1.GET("redis/5", sample.DbInsert)
+		sample1.GET("redis/6", sample.DbInsert)
+		sample1.GET("redis/7", sample.DbInsert)
+		sample1.GET("search/8", sample.DbInsert)
+		sample1.GET("search/9", sample.DbInsert)
 	}
 
-	pet.Use()
+	article1.Use(jwt.JWT())
 	{
-		//获取宠物
-		pet.GET("/pets", v2.GetRecPets)
-		//获取推荐宠物
-		pet.GET("/rec/pets", v1.GetTags)
+		article1.GET("/tags", article.GetTags)
+		article1.POST("/tags", article.AddTag)
+		article1.PUT("/tags/:id", article.EditTag)
+		article1.DELETE("/tags/:id", article.DeleteTag)
+		r.POST("/tags/export", article.ExportTag)
+		r.POST("/tags/import", article.ImportTag)
+		article1.GET("/articles", article.GetArticles)
+		article1.GET("/articles/:id", article.GetArticle)
+		article1.POST("/articles", article.AddArticle)
+		article1.PUT("/articles/:id", article.EditArticle)
+		article1.DELETE("/articles/:id", article.DeleteArticle)
+		article1.POST("/articles/poster/generate", article.GenerateArticlePoster)
+	}
 
+	pet1.Use()
+	{
+		pet1.GET("/pets", pet.GetRecPets)
+		pet1.GET("/rec/pets", article.GetTags)
 	}
 
 	user1.Use()
 	{
-		user1.Group("login", user.Login)
+		user1.POST("/register", user.Register)
+		user1.POST("/login", user.Login)
+		user1.POST("/logout", user.Logout)
 	}
 
 	return r
