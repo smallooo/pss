@@ -38,6 +38,33 @@ func GetRecPets(c *gin.Context) {
 		"data": data,
 	})
 }
+func GetTotal(c *gin.Context) {
+	name := c.Query("name")
+
+	maps := make(map[string]interface{})
+	data := make(map[string]interface{})
+
+	if name != "" {
+		maps["name"] = name
+	}
+
+	var state int = -1
+	if arg := c.Query("state"); arg != "" {
+		state = com.StrTo(arg).MustInt()
+		maps["state"] = state
+	}
+
+	code := e.SUCCESS
+
+	data["lists"], _ = models.GetTags(util.GetPage(c), setting.AppSetting.PageSize, maps)
+	data["total"] = models.GetTagTotal(maps)
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"msg":  e.GetMsg(code),
+		"data": data,
+	})
+}
 
 //// @Summary 新增文章标签
 //// @Produce  json

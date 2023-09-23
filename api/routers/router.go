@@ -78,6 +78,7 @@ func InitRouter() *gin.Engine {
 	{
 		pet1.GET("/pets", pet.GetRecPets)
 		pet1.GET("/rec/pets", article.GetTags)
+		pet1.GET("/getTotal", pet.GetTotal)
 	}
 
 	user1.Use()

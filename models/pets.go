@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
+	"pss/pkg/setting"
 )
 
 type Pet struct {
@@ -25,9 +26,9 @@ func GetPets(pageNum int, pageSize int, maps interface{}) ([]Pet, error) {
 	)
 
 	if pageSize > 0 && pageNum > 0 {
-		err = db.Find(&pets).Offset(pageNum).Limit(pageSize).Error
+		err = setting.MysqlClient.Find(&pets).Offset(pageNum).Limit(pageSize).Error
 	} else {
-		err = db.Find(&pets).Error
+		err = setting.MysqlClient.Find(&pets).Error
 	}
 
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -38,11 +39,11 @@ func GetPets(pageNum int, pageSize int, maps interface{}) ([]Pet, error) {
 }
 
 func GetPetTotal(maps interface{}) (count int) {
-	db.Model(&Tag{}).Where(maps).Count(&count)
+	setting.MysqlClient.Model(&Tag{}).Where(maps).Count(&count)
 	return
 }
 
 func GetPetByCategory(maps interface{}) (count int) {
-	db.Model(&Pet{}).Where(maps)
+	setting.MysqlClient.Model(&Pet{}).Where(maps)
 	return
 }

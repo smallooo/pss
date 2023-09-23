@@ -36,7 +36,7 @@ type Article struct {
 // ExistArticleByID checks if an article exists based on ID
 func ExistArticleByID(id int) (bool, error) {
 	var article Article
-	err := setting.mysqlClient.Select("id").Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Error
+	err := setting.MysqlClient.Select("id").Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
@@ -49,13 +49,13 @@ func ExistArticleByID(id int) (bool, error) {
 }
 
 func GetArticleTotal(maps interface{}) (count int) {
-	db.Model(&Article{}).Where(maps).Count(&count)
+	setting.MysqlClient.Model(&Article{}).Where(maps).Count(&count)
 
 	return
 }
 
 func GetArticles(pageNum int, pageSize int, maps interface{}) (articles []Article) {
-	db.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles)
+	setting.MysqlClient.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles)
 
 	return
 }
@@ -69,7 +69,7 @@ func GetArticles(pageNum int, pageSize int, maps interface{}) (articles []Articl
 
 func GetArticle(id int) (*Article, error) {
 	var article Article
-	err := db.Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Related(&article.Tag).Error
+	err := setting.MysqlClient.Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Related(&article.Tag).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func GetArticle(id int) (*Article, error) {
 }
 
 func EditArticle(id int, data interface{}) bool {
-	db.Model(&Article{}).Where("id = ?", id).Updates(data)
+	setting.MysqlClient.Model(&Article{}).Where("id = ?", id).Updates(data)
 
 	return true
 }
@@ -94,7 +94,7 @@ func AddArticle(data map[string]interface{}) error {
 		State:         data["state"].(int),
 		CoverImageUrl: data["cover_image_url"].(string),
 	}
-	if err := db.Create(&article).Error; err != nil {
+	if err := setting.MysqlClient.Create(&article).Error; err != nil {
 		return err
 	}
 
@@ -103,7 +103,7 @@ func AddArticle(data map[string]interface{}) error {
 
 // DeleteArticle delete a single article
 func DeleteArticle(id int) error {
-	if err := db.Where("id = ?", id).Delete(Article{}).Error; err != nil {
+	if err := setting.MysqlClient.Where("id = ?", id).Delete(Article{}).Error; err != nil {
 		return err
 	}
 
@@ -123,7 +123,7 @@ func (article *Article) BeforeUpdate(scope *gorm.Scope) error {
 }
 
 func CleanAllArticle() bool {
-	db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Article{})
+	setting.MysqlClient.Unscoped().Where("deleted_on != ? ", 0).Delete(&Article{})
 
 	return true
 }

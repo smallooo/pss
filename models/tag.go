@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
+	"pss/pkg/setting"
 	"time"
 )
 
@@ -22,9 +23,9 @@ func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
 	)
 
 	if pageSize > 0 && pageNum > 0 {
-		err = db.Where(maps).Find(&tags).Offset(pageNum).Limit(pageSize).Error
+		err = setting.MysqlClient.Where(maps).Find(&tags).Offset(pageNum).Limit(pageSize).Error
 	} else {
-		err = db.Where(maps).Find(&tags).Error
+		err = setting.MysqlClient.Where(maps).Find(&tags).Error
 	}
 
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -35,14 +36,14 @@ func GetTags(pageNum int, pageSize int, maps interface{}) ([]Tag, error) {
 }
 
 func GetTagTotal(maps interface{}) (count int) {
-	db.Model(&Tag{}).Where(maps).Count(&count)
+	setting.MysqlClient.Model(&Tag{}).Where(maps).Count(&count)
 
 	return
 }
 
 func ExistTagByName(name string) bool {
 	var tag Tag
-	db.Select("id").Where("name = ?", name).First(&tag)
+	setting.MysqlClient.Select("id").Where("name = ?", name).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
@@ -51,7 +52,7 @@ func ExistTagByName(name string) bool {
 }
 
 func AddTag(name string, state int, createdBy string) bool {
-	db.Create(&Tag{
+	setting.MysqlClient.Create(&Tag{
 		Name:      name,
 		State:     state,
 		CreatedBy: createdBy,
@@ -74,7 +75,7 @@ func (tag *Tag) BeforeUpdate(scope *gorm.Scope) error {
 
 func ExistTagByID(id int) bool {
 	var tag Tag
-	db.Select("id").Where("id = ?", id).First(&tag)
+	setting.MysqlClient.Select("id").Where("id = ?", id).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
@@ -83,19 +84,19 @@ func ExistTagByID(id int) bool {
 }
 
 func DeleteTag(id int) bool {
-	db.Where("id = ?", id).Delete(&Tag{})
+	setting.MysqlClient.Where("id = ?", id).Delete(&Tag{})
 
 	return true
 }
 
 func EditTag(id int, data interface{}) bool {
-	db.Model(&Tag{}).Where("id = ?", id).Updates(data)
+	setting.MysqlClient.Model(&Tag{}).Where("id = ?", id).Updates(data)
 
 	return true
 }
 
 func CleanAllTag() bool {
-	db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{})
+	setting.MysqlClient.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{})
 
 	return true
 }

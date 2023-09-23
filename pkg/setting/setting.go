@@ -9,7 +9,7 @@ import (
 	"github.com/go-ini/ini"
 )
 
-var mysqlClient *gorm.DB
+var MysqlClient *gorm.DB
 var MongoClient *mongo.Client
 
 type App struct {

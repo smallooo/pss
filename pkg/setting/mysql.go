@@ -11,7 +11,7 @@ import (
 func SetupMySql() {
 	var err error
 
-	mysqlClient, err = gorm.Open(DatabaseSetting.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	MysqlClient, err = gorm.Open(DatabaseSetting.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		DatabaseSetting.User,
 		DatabaseSetting.Password,
 		DatabaseSetting.Host,
@@ -25,18 +25,18 @@ func SetupMySql() {
 		return DatabaseSetting.TablePrefix + defaultTableName
 	}
 
-	mysqlClient.SingularTable(true)
-	mysqlClient.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
-	mysqlClient.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
-	mysqlClient.Callback().Delete().Replace("gorm:delete", deleteCallback)
-	mysqlClient.DB().SetMaxIdleConns(10)
-	mysqlClient.DB().SetMaxOpenConns(100)
+	MysqlClient.SingularTable(true)
+	MysqlClient.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
+	MysqlClient.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
+	MysqlClient.Callback().Delete().Replace("gorm:delete", deleteCallback)
+	MysqlClient.DB().SetMaxIdleConns(10)
+	MysqlClient.DB().SetMaxOpenConns(100)
 
 	log.Println("数据库已连接:" + DatabaseSetting.Type)
 }
 
 func CloseDB() {
-	defer mysqlClient.Close()
+	defer MysqlClient.Close()
 }
 
 // updateTimeStampForCreateCallback will set `CreatedOn`, `ModifiedOn` when creating
