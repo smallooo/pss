@@ -12,24 +12,26 @@ import (
 )
 
 func SetupMongo() *mongo.Client {
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://" + MongoSetting.Host))
+	var err error
+	MongoClient, err = mongo.NewClient(options.Client().ApplyURI("mongodb://" + MongoSetting.Host))
 	if err != nil {
 		log.Fatal(err)
 	}
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
+	err = MongoClient.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer client.Disconnect(ctx)
-	err = client.Ping(ctx, readpref.Primary())
+	defer MongoClient.Disconnect(ctx)
+	err = MongoClient.Ping(ctx, readpref.Primary())
 	if err != nil {
 		log.Fatal(err)
 	}
-	databases, err := client.ListDatabaseNames(ctx, bson.M{})
+	databases, err := MongoClient.ListDatabaseNames(ctx, bson.M{})
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(databases)
-	return client
+
+	return MongoClient
 }

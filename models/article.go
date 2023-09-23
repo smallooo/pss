@@ -1,12 +1,11 @@
 package models
 
 import (
+	"pss/pkg/setting"
 	"time"
 
 	"github.com/jinzhu/gorm"
 )
-
-var db *gorm.DB
 
 type Article struct {
 	Model
@@ -37,7 +36,7 @@ type Article struct {
 // ExistArticleByID checks if an article exists based on ID
 func ExistArticleByID(id int) (bool, error) {
 	var article Article
-	err := db.Select("id").Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Error
+	err := setting.mysqlClient.Select("id").Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}

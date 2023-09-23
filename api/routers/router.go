@@ -10,7 +10,6 @@ import (
 	"pss/api/controller/pet"
 	"pss/api/controller/sample"
 	"pss/api/controller/user"
-	"pss/api/middleware/jwt"
 	"pss/docs"
 	"pss/pkg/export"
 	"pss/pkg/qrcode"
@@ -37,7 +36,6 @@ func InitRouter() *gin.Engine {
 	})
 
 	sample1 := r.Group("/sample")
-
 	article1 := r.Group("/article")
 	pet1 := r.Group("/pet")
 	user1 := r.Group("/user")
@@ -48,10 +46,10 @@ func InitRouter() *gin.Engine {
 		sample1.GET("/db/update", sample.DbInsert)
 		sample1.GET("/db/select", sample.DbInsert)
 		sample1.GET("/db/delete", sample.DbInsert)
-		sample1.GET("mongo/1", sample.DbInsert)
-		sample1.GET("mongo/2", sample.DbInsert)
-		sample1.GET("mongo/3", sample.DbInsert)
-		sample1.GET("mongo/4", sample.DbInsert)
+		sample1.GET("mongo/insert", sample.MongoInsert)
+		sample1.GET("mongo/get", sample.MongoGet)
+		sample1.GET("mongo/update", sample.MongoUpdate)
+		sample1.GET("mongo/delete", sample.MongoDelete)
 		sample1.GET("redis/5", sample.DbInsert)
 		sample1.GET("redis/6", sample.DbInsert)
 		sample1.GET("redis/7", sample.DbInsert)
@@ -59,7 +57,8 @@ func InitRouter() *gin.Engine {
 		sample1.GET("search/9", sample.DbInsert)
 	}
 
-	article1.Use(jwt.JWT())
+	//article1.Use(jwt.JWT())
+	article1.Use()
 	{
 		article1.GET("/tags", article.GetTags)
 		article1.POST("/tags", article.AddTag)

@@ -1,33 +1,33 @@
 package setting
 
 import (
+	"github.com/jinzhu/gorm"
+	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"time"
 
 	"github.com/go-ini/ini"
 )
 
+var mysqlClient *gorm.DB
+var MongoClient *mongo.Client
+
 type App struct {
-	JwtSecret string
-	PageSize  int
-	PrefixUrl string
-
+	JwtSecret       string
+	PageSize        int
+	PrefixUrl       string
 	RuntimeRootPath string
-
-	ImagePrefixUrl string
-
-	ImageSavePath  string
-	ImageMaxSize   int
-	ImageAllowExts []string
-
-	ExportSavePath string
-	QrCodeSavePath string
-	FontSavePath   string
-
-	LogSavePath string
-	LogSaveName string
-	LogFileExt  string
-	TimeFormat  string
+	ImagePrefixUrl  string
+	ImageSavePath   string
+	ImageMaxSize    int
+	ImageAllowExts  []string
+	ExportSavePath  string
+	QrCodeSavePath  string
+	FontSavePath    string
+	LogSavePath     string
+	LogSaveName     string
+	LogFileExt      string
+	TimeFormat      string
 }
 
 var AppSetting = &App{}

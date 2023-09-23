@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
+
 	"log"
 	"net/http"
 	"os"
@@ -18,15 +19,12 @@ import (
 	"time"
 )
 
-var client *mongo.Client
-
 func main() {
 	setting.Setup()
 	setting.SetupMySql()
 
-	mongoClient := setting.SetupMongo()
-	fmt.Println("mongoDb" + mongoClient.Database("pss").Name())
-	client = mongoClient
+	setting.SetupMongo()
+	//fmt.Println("mongoDb" + mongoClient.Database("pss").Name())
 
 	logging.Setup()
 	gredis.Setup()
