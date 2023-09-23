@@ -22,10 +22,10 @@ import (
 func main() {
 	setting.Setup()
 	setting.SetupMySql()
-
 	setting.SetupMongo()
 	//fmt.Println("mongoDb" + mongoClient.Database("pss").Name())
-
+	setting.SetupQiniu()
+	setting.SetupRabbitMQ()
 	logging.Setup()
 	gredis.Setup()
 	util.Setup()

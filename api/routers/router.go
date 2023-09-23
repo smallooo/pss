@@ -9,7 +9,6 @@ import (
 	"pss/api/controller/article"
 	"pss/api/controller/pet"
 	"pss/api/controller/sample"
-	"pss/api/controller/user"
 	"pss/docs"
 	"pss/pkg/export"
 	"pss/pkg/qrcode"
@@ -39,6 +38,10 @@ func InitRouter() *gin.Engine {
 	article1 := r.Group("/article")
 	pet1 := r.Group("/pet")
 	user1 := r.Group("/user")
+	video1 := r.Group("/video")
+	market1 := r.Group("/market")
+	mall1 := r.Group("/mall")
+	friend1 := r.Group("/friend")
 
 	sample1.Use()
 	{
@@ -55,9 +58,9 @@ func InitRouter() *gin.Engine {
 		sample1.GET("redis/7", sample.DbInsert)
 		sample1.GET("search/8", sample.DbInsert)
 		sample1.GET("search/9", sample.DbInsert)
+		sample1.GET("sso/qiniu/upload", sample.QiniuUpload)
 	}
 
-	//article1.Use(jwt.JWT())
 	article1.Use()
 	{
 		article1.GET("/tags", article.GetTags)
@@ -83,9 +86,27 @@ func InitRouter() *gin.Engine {
 
 	user1.Use()
 	{
-		user1.POST("/register", user.Register)
-		user1.POST("/login", user.Login)
-		user1.POST("/logout", user.Logout)
+
+	}
+
+	video1.Use()
+	{
+
+	}
+
+	market1.Use()
+	{
+
+	}
+
+	mall1.Use()
+	{
+
+	}
+
+	friend1.Use()
+	{
+
 	}
 
 	return r

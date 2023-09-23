@@ -1,12 +1,11 @@
-package sample
+package setting
 
 import (
 	"fmt"
+	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
 	"math"
 	"time"
-
-	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 func SetupRabbitMQ() (*amqp.Connection, error) {
@@ -15,7 +14,7 @@ func SetupRabbitMQ() (*amqp.Connection, error) {
 	var connection *amqp.Connection
 
 	for {
-		c, err := amqp.Dial("amqp://guest:guest@rabbitmq")
+		c, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 		if err != nil {
 			fmt.Println("RabbitMQ not yet ready...")
 			counts++

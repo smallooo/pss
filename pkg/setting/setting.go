@@ -11,6 +11,7 @@ import (
 
 var MysqlClient *gorm.DB
 var MongoClient *mongo.Client
+var QiniuAccessKey string
 
 type App struct {
 	JwtSecret       string
