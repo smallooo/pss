@@ -52,6 +52,16 @@ type Database struct {
 
 var DatabaseSetting = &Database{}
 
+type Mongo struct {
+	Host        string
+	Password    string
+	MaxIdle     int
+	MaxActive   int
+	IdleTimeout time.Duration
+}
+
+var MongoSetting = &Mongo{}
+
 type Redis struct {
 	Host        string
 	Password    string
@@ -75,6 +85,7 @@ func Setup() {
 	mapTo("app", AppSetting)
 	mapTo("server", ServerSetting)
 	mapTo("database", DatabaseSetting)
+	mapTo("mongo", MongoSetting)
 	mapTo("redis", RedisSetting)
 
 	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024

@@ -6,6 +6,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+var db *gorm.DB
+
 type Article struct {
 	Model
 
