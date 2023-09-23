@@ -8,12 +8,12 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"pss/api/routers"
 	"pss/models"
 	"pss/pkg/gredis"
 	"pss/pkg/logging"
 	"pss/pkg/setting"
 	"pss/pkg/util"
-	"pss/routers"
 	"time"
 )
 
